@@ -1,6 +1,6 @@
 package com.techelevator;
 
-public class PracticePurchase extends VendingMachineCLI{
+public class PracticePurchase {
     private double moneyFed;
     private double price;
     private double changeDue;

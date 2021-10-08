@@ -13,10 +13,9 @@ public class VendingMachineCLI extends Products{
 	String name;
 	double price;
 
+	public VendingMachineCLI(double moneyFed, double price, String name, String slot) {
 
-	public VendingMachineCLI(double moneyFed, double price, String name) {
-
-			super(name, price);
+			super(name, price, slot);
 			this.moneyFed = moneyFed;
 
 			Scanner input = new Scanner(System.in);
@@ -29,7 +28,7 @@ public class VendingMachineCLI extends Products{
 			firstChoiceMade = input.nextLine();
 
 			if (firstChoiceMade == "1") {
-
+				System.out.println(listOfItems());
 			} else if (firstChoiceMade == "2") {
 				System.out.println("(1) Feed Money");
 				System.out.println("(2) Select Product");
@@ -39,6 +38,7 @@ public class VendingMachineCLI extends Products{
 				secondChoiceMade = input.nextLine();
 			} else if (firstChoiceMade == "3") {
 				System.out.println("Program ending.");
+				System.exit(1);
 			} else {
 				System.out.println("Invalid choice.");
 			}
@@ -48,10 +48,19 @@ public class VendingMachineCLI extends Products{
 
 				System.out.println("How much money (in dollars) would you like to add?");
 				moneyFed = Double.parseDouble(input.nextLine());
+				double[] possibleBills = {1.00, 5.00, 10.00, 20.00};
+				for (int i = 0; i < possibleBills.length - 1; i++){
+					if (moneyFed == possibleBills[i]){
+						continue;
+					} else {
+						System.out.println("invalid bill inserted.");
+					}
+				}
 
 			} else if (secondChoiceMade == "2") {
 				System.out.println("What product would you like to buy?");
-				name = input.nextLine();
+				slot = input.nextLine();
+				price = listOfItems().get(slot);
 			} else if (secondChoiceMade == "3") {
 
 			} else {
@@ -61,6 +70,7 @@ public class VendingMachineCLI extends Products{
 
 
 		}
+
 
 	public void printTransaction(String name, String itemSlot, double price) {
 		File transactionLog = new File("transactionLog.txt");
@@ -72,7 +82,7 @@ public class VendingMachineCLI extends Products{
 			}
 			try (PrintWriter pw = new PrintWriter(new FileWriter(transactionLog, true))) {
 
-			//	pw.println("DateTime            | Product | Slot | AmountAccepted | Balance");
+			pw.println("DateTime            | Product | Slot | AmountAccepted | Balance");
 
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
@@ -86,7 +96,7 @@ public class VendingMachineCLI extends Products{
 			pw.print(name + " | ");
 			pw.print(itemSlot + "   | ");
 			pw.print(moneyFed + " | ");
-			// pw.println(changeInCoins(moneyFed - itemPrice));
+			pw.println((moneyFed - price));
 		} catch (Exception e) {
 			System.out.println("There was a problem writing to the log file.");
 			System.out.println(e.getMessage());
@@ -99,22 +109,9 @@ public class VendingMachineCLI extends Products{
 		return null;
 	}
 
-}
-/*
-public class Item {
-	private String slot;
-	private String name;
-	private int price;
-	private int stock;
-	private int sales;
+	public static void main (String[] args){}
 
-	public Item(String slot, String name, int price)
-	{
-		this.slot = slot;
-		this.name = name;
-		this.price = price;
-		stock = 5;
-		sales = 0;
-	}
- */
+
+}
+
 

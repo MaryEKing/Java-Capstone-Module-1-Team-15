@@ -7,9 +7,9 @@ public class Purchase extends VendingMachineCLI{
     private int numberOfQuarters;
     private int numberOfDimes;
     private int numberOfNickles;
-    
-    public Purchase(double moneyFed, double price, double changeDue){
-        super(moneyFed, price);
+
+    public Purchase(double moneyFed, double price, double changeDue, String name, String slot){
+        super(moneyFed, price, name, slot);
         this.changeDue = changeDue;
     }
 
