@@ -1,76 +1,102 @@
 package com.techelevator;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
-public class VendingMachineCLI extends Products{
+public class VendingMachineCLI {
 
 	double moneyFed;
 	String name;
+	String slot;
 	double price;
+	//List<Product> purchasedObjects = new ArrayList<Product>();
+	Map<String, Product> inventoryMap;
+	public  VendingMachineCLI () throws FileNotFoundException {
+		VendingMachine vendingMachine = new VendingMachine();
+		// Get the inventory file
+		File file = vendingMachine.getInputFile();
+		// Read the inventory file and put it in inventoryMap
+		this.inventoryMap = vendingMachine.getInventory(file) ;
 
-	public VendingMachineCLI(double moneyFed, double price, String name, String slot) {
-
-			super(name, price, slot);
-			this.moneyFed = moneyFed;
+			//super(name, price, slot);
+			//this.moneyFed = moneyFed;
 
 			Scanner input = new Scanner(System.in);
 			String firstChoiceMade = "";
 			String secondChoiceMade = "";
 
+		while(true) {
 			System.out.println("(1) Display Vending Machine Items");
 			System.out.println("(2) Purchase");
 			System.out.println("(3) Exit");
 			firstChoiceMade = input.nextLine();
 
-			if (firstChoiceMade == "1") {
-				System.out.println(listOfItems());
-			} else if (firstChoiceMade == "2") {
-				System.out.println("(1) Feed Money");
-				System.out.println("(2) Select Product");
-				System.out.println("(3) Finish Purchase");
-				System.out.println();
-				System.out.println("Current money Provided: " + moneyFed);
-				secondChoiceMade = input.nextLine();
-			} else if (firstChoiceMade == "3") {
-				System.out.println("Program ending.");
-				System.exit(1);
-			} else {
-				System.out.println("Invalid choice.");
-			}
 
-
-			if (secondChoiceMade == "1") {
-
-				System.out.println("How much money (in dollars) would you like to add?");
-				moneyFed = Double.parseDouble(input.nextLine());
-				double[] possibleBills = {1.00, 5.00, 10.00, 20.00};
-				for (int i = 0; i < possibleBills.length - 1; i++){
-					if (moneyFed == possibleBills[i]){
-						continue;
-					} else {
-						System.out.println("invalid bill inserted.");
-					}
+				if (firstChoiceMade.equals("1") ){
+					listOfItems();
+				} else if (firstChoiceMade.equals("1") ) {
+					System.out.println("(1) Feed Money");
+					System.out.println("(2) Select Product");
+					System.out.println("(3) Finish Purchase");
+					System.out.println();
+					System.out.println("Current money Provided: " + moneyFed);
+					secondChoiceMade = input.nextLine();
+				} else if (firstChoiceMade.equals("3") ) {
+					System.out.println("Program ending.");
+					System.exit(1);
+				} else {
+					System.out.println("Invalid choice.");
 				}
 
-			} else if (secondChoiceMade == "2") {
-				System.out.println("What product would you like to buy?");
-				slot = input.nextLine();
-				price = listOfItems().get(slot);
-			} else if (secondChoiceMade == "3") {
 
-			} else {
-				System.out.println("Invalid choice.");
-			}
+				if (secondChoiceMade == "1") {
 
+					System.out.println("How much money (in dollars) would you like to add?");
+					moneyFed = Double.parseDouble(input.nextLine());
+					double[] possibleBills = {1.00, 5.00, 10.00, 20.00};
+					for (int i = 0; i < possibleBills.length - 1; i++) {
+						if (moneyFed == possibleBills[i]) {
+							continue;
+						} else {
+							System.out.println("invalid bill inserted.");
+						}
+					}
 
+				} else if (secondChoiceMade == "2") {
+					System.out.println("What product would you like to buy?");
+					slot = input.nextLine();
+					price = this.inventoryMap.get(slot).getPrice();
+				} else if (secondChoiceMade == "3") {
+
+				} else {
+					System.out.println("Invalid choice.");
+				}
+
+			} // End of While loop
 
 		}
 
+		private String listOfItems(){
+
+				String[] productArray = new String[this.inventoryMap.size()];
+				int ctr = 0;
+				Set<Map.Entry<String, Product>> entrySet = this.inventoryMap.entrySet();
+				for (Map.Entry<String, Product> entry: entrySet) {
+					String key = entry.getKey();
+					Product value = entry.getValue();
+					productArray[ctr] = key + " " + value.toString();
+					System.out.println(key + " " + value.toString());
+					ctr++;
+				}
+				return productArray.toString();
+		}
 
 	public void printTransaction(String name, String itemSlot, double price) {
 		File transactionLog = new File("transactionLog.txt");
@@ -104,12 +130,23 @@ public class VendingMachineCLI extends Products{
 
 	}
 
-	@Override
+	//@Override
 	public String getSound() {
 		return null;
 	}
 
-	public static void main (String[] args){}
+	// This is the main entry point for ALL java programs. It runs first.
+	public static void main (String[] args) throws FileNotFoundException {
+
+
+
+		VendingMachineCLI cli = new VendingMachineCLI();
+		//try {
+		//	cli.run();
+		//} catch (FileNotFoundException e) {
+		//	e.printStackTrace();
+		//}
+	}
 
 
 }

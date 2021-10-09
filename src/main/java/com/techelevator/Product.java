@@ -4,14 +4,14 @@ import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.HashMap;
 
-public abstract class Products {
+public abstract class Product {
     private String name;
     private double price;
     private String slot;
 
     private int numberOfItems = 5;
 
-    public Products(String name, double price, String slot) {
+    public Product(String name, double price, String slot) {
         this.name = name;
         this.price = price;
         this.slot = slot;
