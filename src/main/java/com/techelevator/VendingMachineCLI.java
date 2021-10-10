@@ -16,6 +16,9 @@ public class VendingMachineCLI {
 	String name;
 	String slot;
 	double price;
+	String changeInCoins;
+	double balance;
+	double changeDue;
 	//List<Product> purchasedObjects = new ArrayList<Product>();
 	Map<String, Product> inventoryMap;
 	public  VendingMachineCLI () throws FileNotFoundException {
@@ -25,8 +28,8 @@ public class VendingMachineCLI {
 		// Read the inventory file and put it in inventoryMap
 		this.inventoryMap = vendingMachine.getInventory(file) ;
 
-			//super(name, price, slot);
-			//this.moneyFed = moneyFed;
+			// super(name, price, slot);
+			// this.moneyFed = moneyFed;
 
 			Scanner input = new Scanner(System.in);
 			String firstChoiceMade = "";
@@ -41,13 +44,14 @@ public class VendingMachineCLI {
 
 				if (firstChoiceMade.equals("1") ){
 					listOfItems();
-				} else if (firstChoiceMade.equals("1") ) {
-					System.out.println("(1) Feed Money");
-					System.out.println("(2) Select Product");
-					System.out.println("(3) Finish Purchase");
-					System.out.println();
-					System.out.println("Current money Provided: " + moneyFed);
-					secondChoiceMade = input.nextLine();
+				} else if (firstChoiceMade.equals("2") ) {
+						System.out.println("(1) Feed Money");
+						System.out.println("(2) Select Product");
+						System.out.println("(3) Finish Purchase");
+						System.out.println();
+						System.out.println("Current money Provided: " + moneyFed);
+						secondChoiceMade = input.nextLine();
+
 				} else if (firstChoiceMade.equals("3") ) {
 					System.out.println("Program ending.");
 					System.exit(1);
@@ -56,29 +60,31 @@ public class VendingMachineCLI {
 				}
 
 
-				if (secondChoiceMade == "1") {
+				if (secondChoiceMade.equals("1")) {
 
 					System.out.println("How much money (in dollars) would you like to add?");
-					moneyFed = Double.parseDouble(input.nextLine());
+					String money = input.nextLine();
+					double moneyInDouble = Double.parseDouble(money);
 					double[] possibleBills = {1.00, 5.00, 10.00, 20.00};
 					for (int i = 0; i < possibleBills.length - 1; i++) {
 						if (moneyFed == possibleBills[i]) {
-							continue;
+							moneyFed = moneyInDouble;
 						} else {
 							System.out.println("invalid bill inserted.");
 						}
 					}
 
-				} else if (secondChoiceMade == "2") {
+				} else if (secondChoiceMade.equals("2")) {
 					System.out.println("What product would you like to buy?");
 					slot = input.nextLine();
 					price = this.inventoryMap.get(slot).getPrice();
-				} else if (secondChoiceMade == "3") {
-
+					balance += price;
+				} else if (secondChoiceMade.equals("3")) {
+					changeDue = moneyFed - balance;
+					System.out.println(changeDue);
 				} else {
 					System.out.println("Invalid choice.");
 				}
-
 			} // End of While loop
 
 		}
@@ -99,7 +105,7 @@ public class VendingMachineCLI {
 		}
 
 	public void printTransaction(String name, String itemSlot, double price) {
-		File transactionLog = new File("transactionLog.txt");
+		File transactionLog = new File("Log.txt");
 		if (!transactionLog.exists()) {
 			try {
 				transactionLog.createNewFile();
@@ -130,7 +136,7 @@ public class VendingMachineCLI {
 
 	}
 
-	//@Override
+	// @Override
 	public String getSound() {
 		return null;
 	}
@@ -148,6 +154,9 @@ public class VendingMachineCLI {
 		//}
 	}
 
+	public String getChangeInCoins() {
+		return changeInCoins;
+	}
 
 }
 
