@@ -1,9 +1,6 @@
 package com.techelevator;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -23,7 +20,7 @@ public class VendingMachineCLI {
 	//List<Product> purchasedObjects = new ArrayList<Product>();
 	Map<String, Product> inventoryMap;
 
-	public VendingMachineCLI() throws FileNotFoundException {
+	public VendingMachineCLI() throws FileNotFoundException, IOException {
 		VendingMachine vendingMachine = new VendingMachine();
 		// Get the inventory file
 		File file = vendingMachine.getInputFile();
@@ -51,11 +48,14 @@ public class VendingMachineCLI {
 				System.out.println("(2) Select Product");
 				System.out.println("(3) Finish Purchase");
 				System.out.println();
-				System.out.println("Current money Provided: " + moneyFed);
+				System.out.println("Current money Provided: " + vendingMachine.getBalance());
 				secondChoiceMade = input.nextLine();
 
 			} else if (firstChoiceMade.equals("3")) {
 				System.out.println("Program ending.");
+				vendingMachine.returnChange();
+				vendingMachine.balance = 0;
+				vendingMachine.logFile();
 				System.exit(1);
 			}
 
@@ -64,23 +64,38 @@ public class VendingMachineCLI {
 
 				System.out.println("How much money (in dollars) would you like to add?");
 				String money = input.nextLine();
-				double moneyInDouble = Double.parseDouble(money);
-				double[] possibleBills = {1.00, 2.00, 5.00, 10.00};
-				for (int i = 0; i < possibleBills.length - 1; i++) {
-					if (moneyInDouble == possibleBills[i]) {
-						moneyFed = moneyInDouble;
-						System.out.println("You've fed $" + moneyFed);
-						break;
-					}
-				}
+				//double moneyInDouble = Double.parseDouble(money);
+				//double[] possibleBills = {1.00, 2.00, 5.00, 10.00};
+				//for (int i = 0; i < possibleBills.length - 1; i++) {
+				//	if (moneyInDouble == possibleBills[i]) {
+				//		moneyFed = moneyInDouble;
+				//		System.out.println("You've fed $" + moneyFed);
+				//		break;
+				//	}
+			    //}
+				vendingMachine.feedMoney(Double.parseDouble(money));
+
 			} else if (secondChoiceMade.equals("2")) {
 				System.out.println("What product would you like to buy?");
 				slot = input.nextLine();
 				price = this.inventoryMap.get(slot).getPrice();
-				balance += price;
+				// Check if there is enough money or if there is a balance
+				if (!this.inventoryMap.get(slot).isAvailableToPurchase()
+				|| price > vendingMachine.getBalance()){System.out.println("Not Available!");}
+				// else do the purchase
+				else {
+					this.inventoryMap.get(slot).purchaseItem();
+					vendingMachine.balance = vendingMachine.balance - price;
+					System.out.println("Name: " + this.inventoryMap.get(slot).getName() + " Cost: " + this.inventoryMap.get(slot).getPrice() + " Balance: " + vendingMachine.balance);
+					System.out.println(this.inventoryMap.get(slot).getSound());
+					vendingMachine.log("PM", price + vendingMachine.balance, vendingMachine.balance);
+				}
+				//balance += price;
 			} else if (secondChoiceMade.equals("3")) {
-				changeDue = moneyFed - balance;
-				System.out.println(changeDue);
+				//changeDue = moneyFed - balance;
+				//System.out.println(changeDue);
+				vendingMachine.returnChange();
+				vendingMachine.balance = 0;
 			} else {
 				System.out.println("Invalid choice.");
 			}
@@ -141,7 +156,7 @@ public class VendingMachineCLI {
 	}
 
 	// This is the main entry point for ALL java programs. It runs first.
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws IOException {
 
 
 		VendingMachineCLI cli = new VendingMachineCLI();

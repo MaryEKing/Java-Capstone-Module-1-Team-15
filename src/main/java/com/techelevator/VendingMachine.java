@@ -92,8 +92,8 @@ public class VendingMachine {
         return changeInCoins;
     }
 
-    public void logFile() throws IOException  {
-        File outputFile = new File("..\\..\\..\\..\\..\\..\\log.txt");
+    public void logFile() throws IOException {
+        File outputFile = new File("C:\\Users\\Student\\workspace\\java-capstone-module-1-team-15\\log.txt");
         List<String> list = getList();
         try(FileWriter logWriter = new FileWriter(outputFile, true)){
             for(String str : list) {
@@ -106,7 +106,7 @@ public class VendingMachine {
 
         LocalDateTime time = LocalDateTime.now();
         DecimalFormat myFormat = new DecimalFormat("#.00");
-        String str = time + " " + name + " " + beginningAmount + " " + myFormat.format(endAmount);
+        String str = time + " " + name + " $" + myFormat.format(beginningAmount) + " $" + myFormat.format(endAmount);
         list.add(str);
         return list;
     }

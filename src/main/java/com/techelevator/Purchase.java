@@ -2,6 +2,7 @@ package com.techelevator;
 import com.techelevator.Purchase;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Purchase extends VendingMachineCLI{
     private double moneyFed;
@@ -13,7 +14,7 @@ public class Purchase extends VendingMachineCLI{
     String changeInCoins;
 
 
-    public Purchase(double changeDue) throws FileNotFoundException {
+    public Purchase(double changeDue) throws FileNotFoundException , IOException {
         this.changeDue = changeDue;
     }
 
