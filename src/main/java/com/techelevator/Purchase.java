@@ -10,16 +10,17 @@ public class Purchase extends VendingMachineCLI{
     private int numberOfQuarters;
     private int numberOfDimes;
     private int numberOfNickles;
+    String changeInCoins;
 
 
-    public Purchase(double moneyFed, double price, double changeDue, String name, String slot) throws FileNotFoundException {
-        super();
+    public Purchase(double changeDue) throws FileNotFoundException {
         this.changeDue = changeDue;
     }
 
+
     public String makeChange(){
 
-        String changeInCoins;
+
 
         while (changeDue >= .25){
             numberOfQuarters++;
@@ -45,12 +46,28 @@ public class Purchase extends VendingMachineCLI{
         return moneyFed;
     }
 
+    public void setMoneyFed(double moneyFed) {
+        this.moneyFed = moneyFed;
+    }
+
     public double getPrice() {
         return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getChangeDue() {
+        return changeDue;
     }
 
     public double setChangeDue() {
         changeDue = moneyFed - price;
         return changeDue;
+    }
+
+    public void setChangeInCoins(String changeInCoins) {
+        this.changeInCoins = changeInCoins;
     }
 }

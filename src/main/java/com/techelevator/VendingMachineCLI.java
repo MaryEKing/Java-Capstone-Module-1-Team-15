@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -21,88 +22,86 @@ public class VendingMachineCLI {
 	double changeDue;
 	//List<Product> purchasedObjects = new ArrayList<Product>();
 	Map<String, Product> inventoryMap;
-	public  VendingMachineCLI () throws FileNotFoundException {
+
+	public VendingMachineCLI() throws FileNotFoundException {
 		VendingMachine vendingMachine = new VendingMachine();
 		// Get the inventory file
 		File file = vendingMachine.getInputFile();
 		// Read the inventory file and put it in inventoryMap
-		this.inventoryMap = vendingMachine.getInventory(file) ;
+		this.inventoryMap = vendingMachine.getInventory(file);
 
-			// super(name, price, slot);
-			// this.moneyFed = moneyFed;
+		// super(name, price, slot);
+		// this.moneyFed = moneyFed;
 
-			Scanner input = new Scanner(System.in);
-			String firstChoiceMade = "";
-			String secondChoiceMade = "";
+		Scanner input = new Scanner(System.in);
+		String firstChoiceMade = "";
+		String secondChoiceMade = "";
 
-		while(true) {
+		while (true) {
 			System.out.println("(1) Display Vending Machine Items");
 			System.out.println("(2) Purchase");
 			System.out.println("(3) Exit");
 			firstChoiceMade = input.nextLine();
 
 
-				if (firstChoiceMade.equals("1") ){
-					listOfItems();
-				} else if (firstChoiceMade.equals("2") ) {
-						System.out.println("(1) Feed Money");
-						System.out.println("(2) Select Product");
-						System.out.println("(3) Finish Purchase");
-						System.out.println();
-						System.out.println("Current money Provided: " + moneyFed);
-						secondChoiceMade = input.nextLine();
+			if (firstChoiceMade.equals("1")) {
+				listOfItems();
+			} else if (firstChoiceMade.equals("2")) {
+				System.out.println("(1) Feed Money");
+				System.out.println("(2) Select Product");
+				System.out.println("(3) Finish Purchase");
+				System.out.println();
+				System.out.println("Current money Provided: " + moneyFed);
+				secondChoiceMade = input.nextLine();
 
-				} else if (firstChoiceMade.equals("3") ) {
-					System.out.println("Program ending.");
-					System.exit(1);
-				} else {
-					System.out.println("Invalid choice.");
-				}
+			} else if (firstChoiceMade.equals("3")) {
+				System.out.println("Program ending.");
+				System.exit(1);
+			}
 
 
-				if (secondChoiceMade.equals("1")) {
+			if (secondChoiceMade.equals("1")) {
 
-					System.out.println("How much money (in dollars) would you like to add?");
-					String money = input.nextLine();
-					double moneyInDouble = Double.parseDouble(money);
-					double[] possibleBills = {1.00, 5.00, 10.00, 20.00};
-					for (int i = 0; i < possibleBills.length - 1; i++) {
-						if (moneyFed == possibleBills[i]) {
-							moneyFed = moneyInDouble;
-						} else {
-							System.out.println("invalid bill inserted.");
-						}
+				System.out.println("How much money (in dollars) would you like to add?");
+				String money = input.nextLine();
+				double moneyInDouble = Double.parseDouble(money);
+				double[] possibleBills = {1.00, 2.00, 5.00, 10.00};
+				for (int i = 0; i < possibleBills.length - 1; i++) {
+					if (moneyInDouble == possibleBills[i]) {
+						moneyFed = moneyInDouble;
+						System.out.println("You've fed $" + moneyFed);
+						break;
 					}
-
-				} else if (secondChoiceMade.equals("2")) {
-					System.out.println("What product would you like to buy?");
-					slot = input.nextLine();
-					price = this.inventoryMap.get(slot).getPrice();
-					balance += price;
-				} else if (secondChoiceMade.equals("3")) {
-					changeDue = moneyFed - balance;
-					System.out.println(changeDue);
-				} else {
-					System.out.println("Invalid choice.");
 				}
-			} // End of While loop
+			} else if (secondChoiceMade.equals("2")) {
+				System.out.println("What product would you like to buy?");
+				slot = input.nextLine();
+				price = this.inventoryMap.get(slot).getPrice();
+				balance += price;
+			} else if (secondChoiceMade.equals("3")) {
+				changeDue = moneyFed - balance;
+				System.out.println(changeDue);
+			} else {
+				System.out.println("Invalid choice.");
+			}
+		} // End of While loop
 
+	}
+
+	private String listOfItems() {
+
+		String[] productArray = new String[this.inventoryMap.size()];
+		int ctr = 0;
+		Set<Map.Entry<String, Product>> entrySet = this.inventoryMap.entrySet();
+		for (Map.Entry<String, Product> entry : entrySet) {
+			String key = entry.getKey();
+			Product value = entry.getValue();
+			productArray[ctr] = key + " " + value.toString();
+			System.out.println(key + " " + value.toString());
+			ctr++;
 		}
-
-		private String listOfItems(){
-
-				String[] productArray = new String[this.inventoryMap.size()];
-				int ctr = 0;
-				Set<Map.Entry<String, Product>> entrySet = this.inventoryMap.entrySet();
-				for (Map.Entry<String, Product> entry: entrySet) {
-					String key = entry.getKey();
-					Product value = entry.getValue();
-					productArray[ctr] = key + " " + value.toString();
-					System.out.println(key + " " + value.toString());
-					ctr++;
-				}
-				return productArray.toString();
-		}
+		return Arrays.toString(productArray);
+	}
 
 	public void printTransaction(String name, String itemSlot, double price) {
 		File transactionLog = new File("Log.txt");
@@ -114,7 +113,7 @@ public class VendingMachineCLI {
 			}
 			try (PrintWriter pw = new PrintWriter(new FileWriter(transactionLog, true))) {
 
-			pw.println("DateTime            | Product | Slot | AmountAccepted | Balance");
+				pw.println("DateTime            | Product | Slot | AmountAccepted | Balance");
 
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
@@ -142,8 +141,7 @@ public class VendingMachineCLI {
 	}
 
 	// This is the main entry point for ALL java programs. It runs first.
-	public static void main (String[] args) throws FileNotFoundException {
-
+	public static void main(String[] args) throws FileNotFoundException {
 
 
 		VendingMachineCLI cli = new VendingMachineCLI();

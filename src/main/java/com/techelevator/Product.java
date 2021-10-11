@@ -17,13 +17,6 @@ public abstract class Product {
         this.slot = slot;
 
     }
-    public Map<String, Double> listOfItems(){
-        Map<String, Double> listOfItems = new HashMap<>();
-        for (int i = 0; i <= 16; i++){
-            listOfItems.put(slot, price);
-        }
-        return listOfItems;
-    }
 
     public String getName() {
         return name;

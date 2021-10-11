@@ -67,7 +67,7 @@ public class VendingMachine {
 
     public void feedMoney(double addMoney) {
         Set<Double> values = new HashSet<Double>(Arrays.asList(
-                new Double[] {1.00, 2.00, 5.00, 10.00}));
+                1.00, 2.00, 5.00, 10.00));
         if(values.contains(addMoney)) {
             balance += addMoney;
         } else {
@@ -78,16 +78,18 @@ public class VendingMachine {
         return balance;
     }
 
-    public void returnChange() {
+    public String returnChange() {
         Double[] change = new Double[] {0.25, 0.10, 0.05};
-        String[] coinName = new String[] {"Quarter(s)", "Dime(s)", "Nickle(s)"};
+        String[] coinName = new String[] {"Quarter(s)", "Dime(s)", "Nickel(s)"};
+        int counter;
+        String changeInCoins = "";
         for(int i = 0; i < change.length; i++) {
-            int counter;
             counter = (int) (balance / change[i]);
-
             balance -= (change[i] * counter);
             System.out.println(counter + " " + coinName[i]);
+            changeInCoins =  counter + " " + coinName[i];
         }
+        return changeInCoins;
     }
 
     public void logFile() throws IOException  {
